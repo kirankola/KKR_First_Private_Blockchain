@@ -83,7 +83,10 @@ class Blockchain {
                 self.chain.push(blockObj);
                 self.height = self.chain.length - 1;
                 resolve(blockObj);
-            }
+            } const validate=await this.validateChain()
+                if(validate.length>0){
+                 reject("Invalid chain")
+                }
            
         });
     }
@@ -125,7 +128,10 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             let time = parseInt(message.split(':')[1]);
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-            if((time + (5*60*1000)) >= currentTime){
+            console.log("time" ,time);
+            console.log("currenttime",currentTime);
+            console.log("timediff",currentTime - time );
+            if(currentTime - time <5*60){
                 // verify the signature
                 let isValid = bitcoinMessage.verify(message, address, signature);
                 if(isValid){
@@ -216,7 +222,7 @@ class Blockchain {
                 promises.push(block.validate());
                 if(block.height > 0) {
                     let previousBlockHash = block.previousBlockHash;
-                    let blockHash = chain[chainIndex-1].hash;
+                    let blockHash = self.chain[chainIndex-1].hash;
                     if(blockHash != previousBlockHash){
                         errorLog.push(`Error - Block Heigh: ${block.height} - Previous Hash don't match.`);
                     }

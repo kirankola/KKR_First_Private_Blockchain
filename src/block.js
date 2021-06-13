@@ -41,12 +41,12 @@ class Block {
             // Save in auxiliary variable the current block hash
 			const curHash = self.hash;
 			// Recalculate the hash of the Block
-
-			self.hash = SHA256(JSON.stringify(self)).toString();
-			// Comparing if the hashes changed
-			if (curHash !== self.hash) {
-				resolve(false); // Returning the Block is not valid
-			}
+            self.hash = null;
+            self.hash = SHA256(JSON.stringify(self)).toString();
+            // Comparing if the hashes changed
+            if (curHash !== self.hash) {
+                resolve(false); // Returning the Block is not valid
+            }
 
 			// Returning the Block is valid
 			resolve(true);
